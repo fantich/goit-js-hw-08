@@ -95,6 +95,10 @@ gallery.addEventListener('click', event => {
   }
     
   const largeImageUrl = clickedElement.dataset.source;
-    
-    сonsole.log(largeImageUrl);
+  const imageDescription = clickedElement.alt;
+  const instance = basicLightbox.create(`
+    <img src="${largeImageUrl}" alt="${imageDescription}" />
+  `);
+  
+  instance.show();
 });
