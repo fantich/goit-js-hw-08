@@ -85,20 +85,114 @@ const galleryMarkup = images
     
 gallery.insertAdjacentHTML('beforeend', galleryMarkup);
     
+
+let currentImageIndex = 0;
+let lightboxInstance = null;
+
 gallery.addEventListener('click', event => {
-  event.preventDefault();
-    
   const clickedElement = event.target;
-    
+
   if (!clickedElement.classList.contains('gallery-image')) {
     return;
   }
-    
-  const largeImageUrl = clickedElement.dataset.source;
-  const imageDescription = clickedElement.alt;
-  const instance = basicLightbox.create(`
-    <img src="${largeImageUrl}" alt="${imageDescription}" />
-  `);
-  
-  instance.show();
+
+  event.preventDefault();
+
+  currentImageIndex = images.findIndex(
+    image => image.original === clickedElement.dataset.source
+  );
+
+  const { original, description } = images[currentImageIndex];
+
+  lightboxInstance = basicLightbox.create(
+    `
+      <div class="modal">
+        <button class="modal-close" type="button">×</button>
+        <p class="modal-counter">${currentImageIndex + 1}/${images.length}</p>
+
+        <button class="modal-arrow modal-arrow-left" type="button">‹</button>
+
+        <div class="modal-content">
+          <img class="modal-image" src="${original}" alt="${description}" />
+          <p class="modal-caption">${description}</p>
+        </div>
+
+        <button class="modal-arrow modal-arrow-right" type="button">›</button>
+      </div>
+    `,
+    {
+      onShow: instance => {
+        const modal = instance.element();
+
+        modal
+          .querySelector('.modal-close')
+          .addEventListener('click', () => instance.close());
+
+        modal
+          .querySelector('.modal-arrow-left')
+          .addEventListener('click', showPreviousImage);
+
+        modal
+          .querySelector('.modal-arrow-right')
+          .addEventListener('click', showNextImage);
+
+        document.addEventListener('keydown', onModalKeydown);
+      },
+
+      onClose: () => {
+        document.removeEventListener('keydown', onModalKeydown);
+      },
+    }
+  );
+
+  lightboxInstance.show();
 });
+
+function showPreviousImage() {
+  currentImageIndex =
+    currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1;
+
+  updateModalImage();
+}
+
+function showNextImage() {
+  currentImageIndex =
+    currentImageIndex === images.length - 1 ? 0 : currentImageIndex + 1;
+
+  updateModalImage();
+}
+
+function updateModalImage() {
+  const modalImage = document.querySelector('.modal-image');
+  const modalCaption = document.querySelector('.modal-caption');
+  const modalCounter = document.querySelector('.modal-counter');
+
+  const { original, description } = images[currentImageIndex];
+
+  modalImage.classList.add('is-changing');
+
+  setTimeout(() => {
+    modalImage.src = original;
+    modalImage.alt = description;
+    modalCaption.textContent = description;
+    modalCounter.textContent = `${currentImageIndex + 1}/${images.length}`;
+
+    setTimeout(() => {
+      modalImage.classList.remove('is-changing');
+    }, 100);
+  }, 250);
+}
+
+function onModalKeydown(event) {
+  if (event.key === 'ArrowLeft') {
+    showPreviousImage();
+  }
+
+  if (event.key === 'ArrowRight') {
+    showNextImage();
+  }
+
+  if (event.key === 'Escape') {
+    lightboxInstance.close();
+  }
+}
