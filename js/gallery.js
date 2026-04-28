@@ -64,3 +64,37 @@ const images = [
       },
     ];
     
+const gallery = document.querySelector('.gallery');
+
+const galleryMarkup = images
+  .map(
+    ({ preview, original, description }) => `
+      <li class="gallery-item">
+        <a class="gallery-link" href="${original}">
+          <img
+            class="gallery-image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>
+    `
+  )
+  .join('');
+    
+gallery.insertAdjacentHTML('beforeend', galleryMarkup);
+    
+gallery.addEventListener('click', event => {
+  event.preventDefault();
+    
+  const clickedElement = event.target;
+    
+  if (!clickedElement.classList.contains('gallery-image')) {
+    return;
+  }
+    
+  const largeImageUrl = clickedElement.dataset.source;
+    
+    сonsole.log(largeImageUrl);
+});
