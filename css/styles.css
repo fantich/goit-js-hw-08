@@ -52,16 +52,20 @@ body {
 
 .modal {
   position: relative;
-  width: 1112px;
-  height: 640px;
-  max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 56px);
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
 }
 
 .modal-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1112px;
+  height: 640px;
+  max-width: calc(100vw - 160px);
+  max-height: calc(100vh - 56px);
+  transform: translate(-50%, -50%);
 }
 
 .modal-image {
@@ -91,22 +95,22 @@ body {
 
 .modal-counter {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 24px;
+  left: 24px;
   z-index: 2;
   margin: 0;
   font-size: 12px;
-  color: #808080;
+  color: #ffffff;
 }
 
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 24px;
+  right: 24px;
   z-index: 2;
   border: none;
   background-color: transparent;
-  color: #808080;
+  color: #ffffff;
   font-size: 32px;
   line-height: 1;
   cursor: pointer;
@@ -118,7 +122,7 @@ body {
   z-index: 2;
   border: none;
   background-color: transparent;
-  color: #808080;
+  color: #ffffff;
   font-size: 40px;
   line-height: 1;
   cursor: pointer;
@@ -126,16 +130,16 @@ body {
 }
 
 .modal-arrow-left {
-  left: -80px;
+  left: 24px;
 }
 
 .modal-arrow-right {
-  right: -80px;
+  right: 24px;
 }
 
 .modal-arrow:hover,
 .modal-arrow:focus,
 .modal-close:hover,
 .modal-close:focus {
-  color: #2e2f42;
+  color: #dcdcdc;
 }
